@@ -1,9 +1,511 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <title>简单网页</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- ============ SEO 搜索优化 ============ -->
+    <title>我的各人笔记 · 16岁开发者</title>
+    <meta name="description" content="16岁独立开发者的个人笔记，创意软件「无尽深渊」开放下载。">
+    <meta name="keywords" content="16岁开发者, 无尽深渊, 软件下载, 个人博客, 独立开发">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://example.com/">
+
+    <meta property="og:title" content="我的各人笔记 · 16岁开发者">
+    <meta property="og:description" content="16岁开发者的个人笔记，创意软件「无尽深渊」下载。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://example.com/">
+    <meta property="og:site_name" content="我的各人笔记">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="我的各人笔记 · 16岁开发者">
+    <meta name="twitter:description" content="16岁开发者的个人笔记，创意软件「无尽深渊」开放下载。">
+
+    <style>
+        :root {
+            --bg: #fafaf8;
+            --bg-card: #ffffff;
+            --bg-subtle: #f5f4f1;
+            --text: #1a1a1a;
+            --text-secondary: #6b6b6b;
+            --text-muted: #9a9a9a;
+            --border: #e8e6e1;
+            --border-light: #f0efe9;
+            --accent: #2c2c2c;
+            --accent-hover: #1a1a1a;
+            --highlight: #f0ebe0;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.08);
+            --radius-sm: 6px;
+            --radius: 10px;
+            --radius-lg: 16px;
+            --transition: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Noto Serif SC', 'STSong', 'Songti SC', 'PingFang SC', 'Microsoft YaHei', serif;
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.75;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            letter-spacing: 0.015em;
+        }
+
+        /* 极简顶部导航 */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(250, 250, 248, 0.82);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border-light);
+            padding: 14px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all var(--transition);
+        }
+
+        .top-bar-brand {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+            letter-spacing: 0.04em;
+            font-family: 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', sans-serif;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .top-bar-brand .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: inline-block;
+        }
+
+        .top-bar-nav {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            font-family: 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', sans-serif;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            letter-spacing: 0.03em;
+        }
+
+        .top-bar-nav span {
+            cursor: default;
+            transition: color var(--transition);
+            user-select: none;
+        }
+        .top-bar-nav span:hover {
+            color: var(--text);
+        }
+
+        /* 主布局 */
+        .main-layout {
+            max-width: 620px;
+            margin: 0 auto;
+            padding: 100px 24px 80px;
+            display: flex;
+            flex-direction: column;
+            gap: 36px;
+        }
+
+        /* 头部 */
+        .header-section {
+            text-align: center;
+            padding: 20px 0 8px;
+        }
+
+        .site-title {
+            font-size: 2.6rem;
+            font-weight: 400;
+            letter-spacing: 0.06em;
+            color: var(--text);
+            margin-bottom: 6px;
+            font-family: 'Georgia', 'Noto Serif SC', 'STSong', 'Songti SC', serif;
+            line-height: 1.3;
+        }
+
+        .site-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            letter-spacing: 0.08em;
+            font-family: 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', sans-serif;
+            font-weight: 400;
+            text-transform: uppercase;
+        }
+
+        .ornament-line {
+            width: 40px;
+            height: 1px;
+            background: var(--border);
+            margin: 16px auto 0;
+        }
+
+        .ornament-line.wide {
+            width: 80px;
+        }
+
+        /* 简介卡片 */
+        .blog-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 32px 30px;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition);
+            text-align: center;
+        }
+
+        .blog-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--border);
+        }
+
+        .age-tag {
+            display: inline-block;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            background: var(--bg-subtle);
+            padding: 4px 16px;
+            border-radius: 20px;
+            letter-spacing: 0.04em;
+            font-family: 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', sans-serif;
+            margin-bottom: 12px;
+            border: 1px solid transparent;
+        }
+
+        .bio {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            letter-spacing: 0.02em;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .bio em {
+            font-style: normal;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 18px;
+            justify-content: center;
+        }
+
+        .tag {
+            font-family: 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', sans-serif;
+            font-size: 0.72rem;
+            color: var(--text-secondary);
+            background: transparent;
+            border: 1px solid var(--border-light);
+            padding: 5px 13px;
+            border-radius: 20px;
+            letter-spacing: 0.03em;
+            transition: all var(--transition);
+            cursor: default;
+            user-select: none;
+        }
+
+        .tag:hover {
+            border-color: #c5c0b6;
+            color: var(--text);
+            background: var(--highlight);
+        }
+
+        /* 下载卡片 */
+        .download-card {
+            text-align: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 38px 30px 42px;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition);
+        }
+
+        .download-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--border);
+        }
+
+        .download-card .card-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            font-family: 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', sans-serif;
+            margin-bottom: 20px;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 16px 38px;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            letter-spacing: 0.04em;
+            font-family: 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', sans-serif;
+            transition: all var(--transition);
+            user-select: none;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .download-btn:hover {
+            background: var(--accent-hover);
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.14);
+            transform: translateY(-2px);
+            gap: 16px;
+        }
+
+        .download-btn:active {
+            transform: translateY(0) scale(0.97);
+            transition: all 0.1s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .download-btn .btn-icon {
+            width: 20px;
+            height: 20px;
+            transition: transform var(--transition);
+            flex-shrink: 0;
+        }
+
+        .download-btn:hover .btn-icon {
+            transform: translateY(2px);
+        }
+
+        .download-btn .btn-project {
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        .download-version {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-top: 14px;
+            letter-spacing: 0.04em;
+            font-family: 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', sans-serif;
+        }
+
+        /* 页脚 */
+        .footer {
+            text-align: center;
+            padding: 10px 0;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+            font-family: 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', sans-serif;
+        }
+
+        .footer .divider-dot {
+            display: inline-block;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--border);
+            margin: 0 10px;
+            vertical-align: middle;
+        }
+
+        /* Toast 通知 (轻量) */
+        .toast {
+            position: fixed;
+            top: 28px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-130px);
+            background: #fff;
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 13px 26px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            z-index: 1000;
+            pointer-events: none;
+            transition: transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+            box-shadow: var(--shadow-lg);
+            letter-spacing: 0.03em;
+            font-family: 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+        .toast.success {
+            border-color: #b8c9b0;
+            background: #f9faf7;
+        }
+
+        /* 响应式 */
+        @media (max-width: 600px) {
+            .main-layout {
+                padding: 88px 16px 60px;
+                gap: 24px;
+            }
+            .site-title {
+                font-size: 1.9rem;
+            }
+            .blog-card,
+            .download-card {
+                padding: 24px 18px;
+                border-radius: var(--radius);
+            }
+            .download-btn {
+                padding: 14px 28px;
+                font-size: 0.9rem;
+                border-radius: 36px;
+            }
+            .top-bar {
+                padding: 12px 16px;
+            }
+            .top-bar-nav {
+                gap: 14px;
+                font-size: 0.78rem;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .site-title {
+                font-size: 1.6rem;
+            }
+            .download-btn {
+                padding: 12px 22px;
+                font-size: 0.82rem;
+                gap: 8px;
+            }
+            .top-bar-nav {
+                gap: 10px;
+                font-size: 0.7rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <p>["天天看看开心","1.0","https://download6.mcloud.139.com/storageWeb/servlet/downloadServlet?code=TUEwTTExY2puUkoxWmw3MTcxN3lMd2Fzd21f&un=7AD4E35946BD7CC0BADDD31B5A188FD3E26D302531486168933B6903F78FE814&dom=D933&rate=0&txType=0"]</p>
+
+    <!-- 顶部导航 -->
+    <header class="top-bar">
+        <a href="#" class="top-bar-brand" aria-label="我的各人笔记首页">
+            <span class="dot"></span> 我的各人笔记
+        </a>
+        <nav class="top-bar-nav">
+            <span>笔记</span>
+            <span>项目</span>
+            <span>关于</span>
+        </nav>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="main-layout">
+
+        <!-- 头部 -->
+        <section class="header-section">
+            <h1 class="site-title">我的各人笔记</h1>
+            <p class="site-subtitle">Personal Notes · 16岁开发者</p>
+            <div class="ornament-line wide"></div>
+        </section>
+
+        <!-- 简介卡片（无头像，无姓名） -->
+        <article class="blog-card">
+            <span class="age-tag">16岁 · 独立开发者</span>
+            <p class="bio">
+                从13岁自学编程，至今已走过<em>3年</em>代码旅程。
+                热爱用技术创造有趣的东西，相信年龄从来不是创造力的边界。
+                目前在探索全栈开发与AI应用。
+            </p>
+            <div class="tag-row">
+                <span class="tag">Python</span>
+                <span class="tag">JavaScript</span>
+                <span class="tag">React</span>
+                <span class="tag">Node.js</span>
+                <span class="tag">C++</span>
+                <span class="tag">Unity</span>
+            </div>
+        </article>
+
+        <!-- 下载卡片 -->
+        <section class="download-card">
+            <p class="card-label">📦 获取项目</p>
+            <a class="download-btn" href="https://share.feijipan.com/s/Uz5JcODt" target="_blank" rel="noopener noreferrer" aria-label="下载无尽深渊软件">
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                <span>下载 <span class="btn-project">无尽深渊</span></span>
+            </a>
+            <p class="download-version">版本 v1.0.0 · 适用于 Windows / macOS</p>
+        </section>
+
+        <!-- 页脚 -->
+        <footer class="footer">
+            <span>© 2026 我的各人笔记</span>
+            <span class="divider-dot"></span>
+            <span>用代码书写青春</span>
+        </footer>
+
+    </main>
+
+    <!-- Toast 轻提示（点击链接时短暂显示） -->
+    <div class="toast" id="toast">
+        <span class="toast-icon"></span>
+        <span class="toast-message"></span>
+    </div>
+
+    <script>
+        // 下载按钮点击时显示友好提示（新标签页打开前）
+        const downloadBtn = document.querySelector('.download-btn');
+        if (downloadBtn) {
+            downloadBtn.addEventListener('click', function(e) {
+                const toast = document.getElementById('toast');
+                const iconEl = toast.querySelector('.toast-icon');
+                const msgEl = toast.querySelector('.toast-message');
+                toast.classList.remove('show', 'success');
+                toast.classList.add('success');
+                iconEl.textContent = '✓';
+                msgEl.textContent = '正在前往下载页面…';
+                toast.classList.add('show');
+                clearTimeout(toast._timeout);
+                toast._timeout = setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2200);
+            });
+        }
+
+        console.log('%c我的各人笔记 %c· 16岁开发者',
+            'font-size:1.2em;font-weight:bold;', 'color:#6b6b6b;font-style:italic;');
+        console.log('%c简约 · 记录 · 创造', 'color:#9a9a9a;letter-spacing:0.05em;');
+    </script>
 </body>
 </html>
